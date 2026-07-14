@@ -671,7 +671,7 @@ export default function SinglePage() {
 
           <FadeUp delay={0.22}>
             <p className="mono text-text-faint text-[10px] leading-relaxed tracking-[0.12em] sm:text-xs sm:tracking-[0.15em] break-words">
-              © 2025 divyaraval
+              © 2026 divyaraval
             </p>
           </FadeUp>
         </div>

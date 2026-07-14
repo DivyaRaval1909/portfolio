@@ -42,7 +42,7 @@ const Footer = () => {
 
 
             <div className="text-center md:text-right">
-              <p className="mono text-[#444444] mb-1">© 2025 Divya Raval</p>
+              <p className="mono text-[#444444] mb-1">© 2026 Divya Raval</p>
               <p className="mono text-[#333333] text-sm">
                 [ Pokedex Entry #025 ]
               </p>
