@@ -48,23 +48,29 @@ export default function StatsDashboard() {
 
         // LeetCode
         Promise.all([
-            fetch('https://alfa-leetcode-api.onrender.com/DivyaRaval/solved').then(res => {
-                if (!res.ok) throw new Error('Leetcode solved status not OK');
+            fetch('https://leetcode-api-pied.vercel.app/user/DivyaRaval').then(res => {
+                if (!res.ok) throw new Error('LeetCode user status not OK');
                 return res.json();
             }),
-            fetch('https://alfa-leetcode-api.onrender.com/DivyaRaval/contest').then(res => {
-                if (!res.ok) throw new Error('Leetcode contest status not OK');
+            fetch('https://leetcode-api-pied.vercel.app/user/DivyaRaval/contests').then(res => {
+                if (!res.ok) throw new Error('LeetCode contest status not OK');
                 return res.json();
             })
         ])
-            .then(([solvedData, contestData]) => {
+            .then(([userData, contestData]) => {
+                const acSub = userData.submitStats?.acSubmissionNum || [];
+                const solvedAll = acSub.find((x: any) => x.difficulty === 'All')?.count ?? 0;
+                const solvedEasy = acSub.find((x: any) => x.difficulty === 'Easy')?.count ?? 0;
+                const solvedMedium = acSub.find((x: any) => x.difficulty === 'Medium')?.count ?? 0;
+                const solvedHard = acSub.find((x: any) => x.difficulty === 'Hard')?.count ?? 0;
+
                 setLeetcode({
-                    solvedProblem: solvedData.solvedProblem ?? 0,
-                    contestRating: contestData.contestRating ?? 0,
-                    contestTopPercentage: contestData.contestTopPercentage ?? 0,
-                    easySolved: solvedData.easySolved ?? 0,
-                    mediumSolved: solvedData.mediumSolved ?? 0,
-                    hardSolved: solvedData.hardSolved ?? 0
+                    solvedProblem: solvedAll,
+                    contestRating: contestData.userContestRanking?.rating ?? 0,
+                    contestTopPercentage: contestData.userContestRanking?.topPercentage ?? 0,
+                    easySolved: solvedEasy,
+                    mediumSolved: solvedMedium,
+                    hardSolved: solvedHard
                 });
             })
             .catch(err => console.error('LeetCode stats error:', err))
