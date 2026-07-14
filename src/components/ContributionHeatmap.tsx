@@ -25,35 +25,67 @@ export default function StatsDashboard() {
     const [github, setGithub] = useState<GithubStats | null>(null);
     const [leetcode, setLeetcode] = useState<LeetcodeStats | null>(null);
     const [codeforces, setCodeforces] = useState<CodeforcesStats | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [ghLoading, setGhLoading] = useState(true);
+    const [lcLoading, setLcLoading] = useState(true);
+    const [cfLoading, setCfLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchAllStats() {
-            try {
-                // 1. Fetch GitHub stats
-                const ghRes = await fetch('https://github-contributions-api.jogruber.de/v4/DivyaRaval1909');
-                const ghData = await ghRes.json();
+        // GitHub
+        fetch('https://github-contributions-api.jogruber.de/v4/DivyaRaval1909')
+            .then(res => {
+                if (!res.ok) throw new Error('GitHub status not OK');
+                return res.json();
+            })
+            .then(data => {
                 let totalGh = 0;
-                if (ghData.total) {
-                    totalGh = Object.values(ghData.total).reduce((sum: number, val: any) => sum + val, 0);
+                if (data && data.total) {
+                    totalGh = Object.values(data.total).reduce((sum: number, val: any) => sum + val, 0);
                 }
+                setGithub({ totalContributions: totalGh });
+            })
+            .catch(err => console.error('GitHub stats error:', err))
+            .finally(() => setGhLoading(false));
 
-                // 2. Fetch LeetCode stats
-                const lcSolvedRes = await fetch('https://alfa-leetcode-api.onrender.com/DivyaRaval/solved');
-                const lcSolvedData = await lcSolvedRes.json();
-                const lcContestRes = await fetch('https://alfa-leetcode-api.onrender.com/DivyaRaval/contest');
-                const lcContestData = await lcContestRes.json();
+        // LeetCode
+        Promise.all([
+            fetch('https://alfa-leetcode-api.onrender.com/DivyaRaval/solved').then(res => {
+                if (!res.ok) throw new Error('Leetcode solved status not OK');
+                return res.json();
+            }),
+            fetch('https://alfa-leetcode-api.onrender.com/DivyaRaval/contest').then(res => {
+                if (!res.ok) throw new Error('Leetcode contest status not OK');
+                return res.json();
+            })
+        ])
+            .then(([solvedData, contestData]) => {
+                setLeetcode({
+                    solvedProblem: solvedData.solvedProblem ?? 0,
+                    contestRating: contestData.contestRating ?? 0,
+                    contestTopPercentage: contestData.contestTopPercentage ?? 0,
+                    easySolved: solvedData.easySolved ?? 0,
+                    mediumSolved: solvedData.mediumSolved ?? 0,
+                    hardSolved: solvedData.hardSolved ?? 0
+                });
+            })
+            .catch(err => console.error('LeetCode stats error:', err))
+            .finally(() => setLcLoading(false));
 
-                // 3. Fetch Codeforces stats
-                const cfInfoRes = await fetch('https://codeforces.com/api/user.info?handles=divyaraval');
-                const cfInfoData = await cfInfoRes.json();
-                const cfSubRes = await fetch('https://codeforces.com/api/user.status?handle=divyaraval');
-                const cfSubData = await cfSubRes.json();
-
+        // Codeforces
+        Promise.all([
+            fetch('https://codeforces.com/api/user.info?handles=divyaraval').then(res => {
+                if (!res.ok) throw new Error('Codeforces info status not OK');
+                return res.json();
+            }),
+            fetch('https://codeforces.com/api/user.status?handle=divyaraval').then(res => {
+                if (!res.ok) throw new Error('Codeforces submissions status not OK');
+                return res.json();
+            })
+        ])
+            .then(([infoData, subData]) => {
                 let cfSolvedCount = 0;
-                if (cfSubData.status === 'OK') {
+                if (subData.status === 'OK') {
                     const uniqueSolved = new Set<string>();
-                    cfSubData.result.forEach((sub: any) => {
+                    subData.result.forEach((sub: any) => {
                         if (sub.verdict === 'OK' && sub.problem) {
                             const problemKey = `${sub.problem.contestId}-${sub.problem.index}`;
                             uniqueSolved.add(problemKey);
@@ -62,43 +94,18 @@ export default function StatsDashboard() {
                     cfSolvedCount = uniqueSolved.size;
                 }
 
-                let cfInfo = null;
-                if (cfInfoData.status === 'OK' && cfInfoData.result && cfInfoData.result.length > 0) {
-                    cfInfo = {
-                        rating: cfInfoData.result[0].rating ?? 0,
-                        maxRating: cfInfoData.result[0].maxRating ?? 0,
-                        rank: cfInfoData.result[0].rank ?? 'unrated',
+                if (infoData.status === 'OK' && infoData.result && infoData.result.length > 0) {
+                    setCodeforces({
+                        rating: infoData.result[0].rating ?? 0,
+                        maxRating: infoData.result[0].maxRating ?? 0,
+                        rank: infoData.result[0].rank ?? 'unrated',
                         solvedProblem: cfSolvedCount
-                    };
+                    });
                 }
-
-                setGithub({ totalContributions: totalGh });
-                setLeetcode({
-                    solvedProblem: lcSolvedData.solvedProblem ?? 0,
-                    contestRating: lcContestData.contestRating ?? 0,
-                    contestTopPercentage: lcContestData.contestTopPercentage ?? 0,
-                    easySolved: lcSolvedData.easySolved ?? 0,
-                    mediumSolved: lcSolvedData.mediumSolved ?? 0,
-                    hardSolved: lcSolvedData.hardSolved ?? 0
-                });
-                setCodeforces(cfInfo);
-            } catch (err) {
-                console.error('Failed to fetch developer statistics:', err);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchAllStats();
+            })
+            .catch(err => console.error('Codeforces stats error:', err))
+            .finally(() => setCfLoading(false));
     }, []);
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12">
-                <span className="mono text-xs text-text-faint animate-pulse">fetching developer profile stats...</span>
-            </div>
-        );
-    }
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mx-auto text-left">
@@ -115,7 +122,11 @@ export default function StatsDashboard() {
                         <Github className="w-5 h-5 text-text-faint group-hover:text-accent transition-colors" />
                     </div>
                     <p className="text-3xl font-bold text-text-card-title mb-2">
-                        {github?.totalContributions?.toLocaleString() ?? '—'}
+                        {ghLoading ? (
+                            <span className="text-sm font-normal text-text-faint animate-pulse">loading...</span>
+                        ) : (
+                            github?.totalContributions?.toLocaleString() ?? '—'
+                        )}
                     </p>
                     <p className="mono text-xs text-text-muted">Total Contributions</p>
                 </div>
@@ -140,18 +151,34 @@ export default function StatsDashboard() {
                         <Code className="w-5 h-5 text-text-faint group-hover:text-accent transition-colors" />
                     </div>
                     <p className="text-3xl font-bold text-text-card-title mb-2">
-                        {leetcode?.contestRating ? Math.round(leetcode.contestRating) : '—'}
+                        {lcLoading ? (
+                            <span className="text-sm font-normal text-text-faint animate-pulse">loading...</span>
+                        ) : (
+                            leetcode?.contestRating ? Math.round(leetcode.contestRating) : '—'
+                        )}
                     </p>
                     <p className="mono text-xs text-text-muted mb-4">Contest Rating</p>
 
                     <div className="space-y-1.5 mt-2">
                         <div className="flex justify-between mono text-[10px] text-text-muted">
                             <span>Percentile:</span>
-                            <span className="text-accent font-semibold">Top {leetcode?.contestTopPercentage ? `${leetcode.contestTopPercentage}%` : '—'}</span>
+                            <span className="text-accent font-semibold">
+                                {lcLoading ? (
+                                    <span className="text-[10px] font-normal text-text-faint animate-pulse">loading...</span>
+                                ) : (
+                                    leetcode?.contestTopPercentage ? `Top ${leetcode.contestTopPercentage}%` : '—'
+                                )}
+                            </span>
                         </div>
                         <div className="flex justify-between mono text-[10px] text-text-muted">
                             <span>Solved:</span>
-                            <span className="text-text-base">{leetcode?.solvedProblem ? `${leetcode.solvedProblem} problems` : '—'}</span>
+                            <span className="text-text-base">
+                                {lcLoading ? (
+                                    <span className="text-[10px] font-normal text-text-faint animate-pulse">loading...</span>
+                                ) : (
+                                    leetcode?.solvedProblem ? `${leetcode.solvedProblem} problems` : '—'
+                                )}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -173,22 +200,44 @@ export default function StatsDashboard() {
                         <Award className="w-5 h-5 text-text-faint group-hover:text-accent transition-colors" />
                     </div>
                     <p className="text-3xl font-bold text-text-card-title mb-2">
-                        {codeforces?.rating ?? '—'}
+                        {cfLoading ? (
+                            <span className="text-sm font-normal text-text-faint animate-pulse">loading...</span>
+                        ) : (
+                            codeforces?.rating ?? '—'
+                        )}
                     </p>
                     <p className="mono text-xs text-text-muted mb-4">Contest Rating</p>
                     
                     <div className="space-y-1.5 mt-2">
                         <div className="flex justify-between mono text-[10px] text-text-muted">
                             <span>Rank:</span>
-                            <span className="text-accent font-semibold capitalize">{codeforces?.rank ?? '—'}</span>
+                            <span className="text-accent font-semibold capitalize">
+                                {cfLoading ? (
+                                    <span className="text-[10px] font-normal text-text-faint animate-pulse">loading...</span>
+                                ) : (
+                                    codeforces?.rank ?? '—'
+                                )}
+                            </span>
                         </div>
                         <div className="flex justify-between mono text-[10px] text-text-muted">
                             <span>Solved:</span>
-                            <span className="text-text-base">{codeforces?.solvedProblem ? `${codeforces.solvedProblem} problems` : '—'}</span>
+                            <span className="text-text-base">
+                                {cfLoading ? (
+                                    <span className="text-[10px] font-normal text-text-faint animate-pulse">loading...</span>
+                                ) : (
+                                    codeforces?.solvedProblem ? `${codeforces.solvedProblem} problems` : '—'
+                                )}
+                            </span>
                         </div>
                         <div className="flex justify-between mono text-[10px] text-text-muted">
                             <span>Max Rating:</span>
-                            <span className="text-text-faint">{codeforces?.maxRating ?? '—'}</span>
+                            <span className="text-text-faint">
+                                {cfLoading ? (
+                                    <span className="text-[10px] font-normal text-text-faint animate-pulse">loading...</span>
+                                ) : (
+                                    codeforces?.maxRating ?? '—'
+                                )}
+                            </span>
                         </div>
                     </div>
                 </div>
