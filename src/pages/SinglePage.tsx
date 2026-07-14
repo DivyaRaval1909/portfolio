@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Mail, Linkedin, Github, ExternalLink } from 'lucide-react';
 import { useScramble } from '../hooks/useScramble';
@@ -41,45 +41,8 @@ function SectionHeader({ num, title }: { num: string; title: string }) {
   );
 }
 
-function getOrdinalSuffix(num: number): string {
-  const j = num % 10;
-  const k = num % 100;
-  if (j === 1 && k !== 11) {
-    return num + 'st';
-  }
-  if (j === 2 && k !== 12) {
-    return num + 'nd';
-  }
-  if (j === 3 && k !== 13) {
-    return num + 'rd';
-  }
-  return num + 'th';
-}
-let hasHitCounter = false;
-
 export default function SinglePage() {
   const { display: heroName } = useScramble('/divyaraval', 600);
-
-  const [visitorCount, setVisitorCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    const url = hasHitCounter
-      ? 'https://abacus.jasoncameron.dev/get/divyaraval-portfolio/visits'
-      : 'https://abacus.jasoncameron.dev/hit/divyaraval-portfolio/visits';
-
-    if (!hasHitCounter) {
-      hasHitCounter = true;
-    }
-
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && typeof data.value === 'number') {
-          setVisitorCount(data.value);
-        }
-      })
-      .catch((err) => console.error('Error fetching visitor counter:', err));
-  }, []);
 
 
   const experiences = [
@@ -660,14 +623,6 @@ export default function SinglePage() {
  \\_/   v   \\_/`}
             </pre>
           </FadeUp>
-
-          {visitorCount !== null && (
-            <FadeUp delay={0.2} className="mb-4">
-              <p className="mono text-text-faint text-[10px] sm:text-xs tracking-[0.12em] sm:tracking-[0.15em]">
-                [ you are the <span className="text-text-muted font-bold">{getOrdinalSuffix(visitorCount)}</span> visitor ]
-              </p>
-            </FadeUp>
-          )}
 
           <FadeUp delay={0.22}>
             <p className="mono text-text-faint text-[10px] leading-relaxed tracking-[0.12em] sm:text-xs sm:tracking-[0.15em] break-words">

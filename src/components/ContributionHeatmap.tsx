@@ -189,7 +189,10 @@ export default function StatsDashboard() {
                     </div>
                 </div>
                 <div className="mt-6 border-t border-border-inner pt-4">
-                    <p className="mono text-[10px] text-text-faint">Profile: leetcode.com/DivyaRaval ↗</p>
+                    <div className="flex justify-between mono text-[10px] text-text-muted">
+                        <span>Profile:</span>
+                        <span className="text-accent">leetcode.com/DivyaRaval ↗</span>
+                    </div>
                 </div>
             </a>
 
@@ -248,7 +251,10 @@ export default function StatsDashboard() {
                     </div>
                 </div>
                 <div className="mt-6 border-t border-border-inner pt-4">
-                    <p className="mono text-[10px] text-text-faint">Profile: codeforces.com/profile/divyaraval ↗</p>
+                    <div className="flex justify-between mono text-[10px] text-text-muted">
+                        <span>Profile:</span>
+                        <span className="text-accent">codeforces.com/profile/divyaraval ↗</span>
+                    </div>
                 </div>
             </a>
         </div>
