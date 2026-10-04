@@ -30,7 +30,7 @@ export default function Home() {
           >
             <Marquee pauseOnHover={true} speed={50} className="h-full flex items-center">
               <div className="mono text-[#888888] tracking-wider text-xs md:text-sm mr-10">
-                Software Engineer ✦ Blockchain & Web3 Developer
+                Software Engineer
               </div>
             </Marquee>
           </div>

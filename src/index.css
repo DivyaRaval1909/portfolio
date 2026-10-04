@@ -236,18 +236,4 @@
       font-size: 2rem;
     }
   }
-
-  .theme-img-light {
-    display: block !important;
-  }
-  .theme-img-dark {
-    display: none !important;
-  }
-
-  html.dark .theme-img-light {
-    display: none !important;
-  }
-  html.dark .theme-img-dark {
-    display: block !important;
-  }
 }

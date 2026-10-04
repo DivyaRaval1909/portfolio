@@ -1,6 +1,6 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Mail, Linkedin, Github, ExternalLink } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { Mail, Linkedin, Github, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useScramble } from '../hooks/useScramble';
 import StatsDashboard from '../components/ContributionHeatmap';
 import ConwayBatmanBackground from '../components/ConwayBatmanBackground';
@@ -48,8 +48,8 @@ export default function SinglePage() {
   const experiences = [
     {
       period: 'May 2026 — Jun 2026',
-      company: 'Marga Technology',
-      companyUrl: 'margatechnology.com',
+      company: 'Marga Technologies',
+      companyUrl: 'https://margatech.com',
       role: 'Full Stack Intern',
       points: [
         { href: null, label: null, text: 'Built and maintained full-stack MERN applications, integrating RESTful APIs with JWT authentication and role-based access control.' },
@@ -235,6 +235,25 @@ export default function SinglePage() {
     },
   ];
 
+  const [currentProject, setCurrentProject] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const nextProject = () => {
+    setDirection(1);
+    setCurrentProject((prev) => (prev + 1) % projects.length);
+  };
+
+  const prevProject = () => {
+    setDirection(-1);
+    setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length);
+  };
+
+  const goToProject = (index: number) => {
+    if (index === currentProject) return;
+    setDirection(index > currentProject ? 1 : -1);
+    setCurrentProject(index);
+  };
+
   return (
     <div className="bg-bg-base text-text-base font-mono min-h-screen">
       <MathBackground />
@@ -285,7 +304,7 @@ export default function SinglePage() {
             transition={{ delay: 1.4, duration: 0.6, ease }}
             className="mono text-text-faint text-sm tracking-[0.18em] mb-8"
           >
-            Software Engineer &nbsp;✦&nbsp; Blockchain &amp; Web3 Developer
+            Software Engineer
           </motion.p>
 
           <motion.div
@@ -320,13 +339,8 @@ export default function SinglePage() {
                 <div className="absolute inset-0 border border-border-main rounded-3xl overflow-hidden bg-bg-card hover:border-accent transition-colors duration-300">
                   <img
                     src="/assets/lighttheme.jpeg"
-                    alt="Divya Raval (Light Theme)"
-                    className="theme-img-light w-full h-full object-cover"
-                  />
-                  <img
-                    src="/assets/darktheme.jpeg"
-                    alt="Divya Raval (Dark Theme)"
-                    className="theme-img-dark w-full h-full object-cover"
+                    alt="Divya Raval"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
@@ -432,7 +446,8 @@ export default function SinglePage() {
         <div className="max-w-[900px] mx-auto">
           <SectionHeader num="02" title="projects" />
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {/* Desktop Bento Grid (PC screens >= md) */}
+          <div className="hidden md:grid md:grid-cols-5 gap-4">
             {projects.map((proj, i) => {
               // Bento span map: 5-col grid, wide=3cols(60%), narrow=2cols(40%), full=5cols
               const spanMap = [3, 2, 2, 3, 3, 2, 2, 3, 5];
@@ -443,24 +458,26 @@ export default function SinglePage() {
                   <motion.div
                     whileHover={{ y: -2 }}
                     transition={{ duration: 0.2 }}
-                    className="p-7 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 transition-all duration-300 h-full"
+                    className="p-7 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 transition-all duration-300 h-full flex flex-col justify-between"
                   >
-                    <p className="mono text-xs text-text-light mb-3">{proj.index} ///</p>
-                    <h3 className="text-text-card-title text-lg font-semibold mb-2 tracking-tight">
-                      {proj.title}
-                    </h3>
-                    <p className="text-text-faint text-sm leading-relaxed mb-4">{proj.description}</p>
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {proj.stack.map((t) => (
-                        <span
-                          key={t}
-                          className="mono text-xs text-text-light border border-border-inner px-1.5 py-0.5 rounded"
-                        >
-                          {t}
-                        </span>
-                      ))}
+                    <div>
+                      <p className="mono text-xs text-text-light mb-3">{proj.index} ///</p>
+                      <h3 className="text-text-card-title text-lg font-semibold mb-2 tracking-tight">
+                        {proj.title}
+                      </h3>
+                      <p className="text-text-faint text-sm leading-relaxed mb-4">{proj.description}</p>
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {proj.stack.map((t) => (
+                          <span
+                            key={t}
+                            className="mono text-xs text-text-light border border-border-inner px-1.5 py-0.5 rounded"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 pt-2">
                       <a
                         href={proj.github}
                         target="_blank"
@@ -494,6 +511,179 @@ export default function SinglePage() {
                 </FadeUp>
               );
             })}
+          </div>
+
+          {/* Mobile Horizontal Pagination (< md screens) */}
+          <div className="block md:hidden">
+            <FadeUp delay={0.08}>
+              {/* Pagination Top Header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="mono text-xs text-accent font-semibold">
+                    {`[ ${projects[currentProject].index} / 0${projects.length} ]`}
+                  </span>
+                  <span className="mono text-[11px] text-text-faint">
+                    ({currentProject + 1} of {projects.length})
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={prevProject}
+                    aria-label="Previous project"
+                    className="p-2 border border-border-inner rounded-xl bg-bg-card text-text-light hover:text-accent hover:border-accent active:scale-95 transition-all"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={nextProject}
+                    aria-label="Next project"
+                    className="p-2 border border-border-inner rounded-xl bg-bg-card text-text-light hover:text-accent hover:border-accent active:scale-95 transition-all"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Paginated Card with Swipe Gesture & Smooth Animation */}
+              <div className="relative overflow-hidden min-h-[380px] touch-pan-y">
+                <AnimatePresence initial={false} custom={direction} mode="wait">
+                  <motion.div
+                    key={currentProject}
+                    custom={direction}
+                    variants={{
+                      enter: (dir: number) => ({
+                        x: dir > 0 ? 80 : -80,
+                        opacity: 0,
+                      }),
+                      center: {
+                        x: 0,
+                        opacity: 1,
+                        transition: {
+                          x: { type: 'spring', stiffness: 320, damping: 32 },
+                          opacity: { duration: 0.22 },
+                        },
+                      },
+                      exit: (dir: number) => ({
+                        x: dir < 0 ? 80 : -80,
+                        opacity: 0,
+                        transition: {
+                          x: { type: 'spring', stiffness: 320, damping: 32 },
+                          opacity: { duration: 0.18 },
+                        },
+                      }),
+                    }}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.25}
+                    onDragEnd={(_e, { offset, velocity }) => {
+                      const swipe = Math.abs(offset.x) * velocity.x;
+                      if (offset.x < -35 || swipe < -1000) {
+                        nextProject();
+                      } else if (offset.x > 35 || swipe > 1000) {
+                        prevProject();
+                      }
+                    }}
+                    className="w-full p-6 sm:p-7 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:border-accent transition-all duration-300 flex flex-col justify-between min-h-[360px]"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="mono text-xs text-accent font-medium">
+                          {projects[currentProject].index} ///
+                        </p>
+                        <span className="mono text-[10px] text-text-faint tracking-wider">
+                          swipe ↔
+                        </span>
+                      </div>
+                      <h3 className="text-text-card-title text-xl font-semibold mb-3 tracking-tight">
+                        {projects[currentProject].title}
+                      </h3>
+                      <p className="text-text-faint text-sm leading-relaxed mb-5">
+                        {projects[currentProject].description}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5 mb-6">
+                        {projects[currentProject].stack.map((t) => (
+                          <span
+                            key={t}
+                            className="mono text-xs text-text-light border border-border-inner px-2 py-0.5 rounded-md bg-bg-base/40"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-4 pt-4 border-t border-border-inner/60">
+                      <a
+                        href={projects[currentProject].github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1.5 py-0.5"
+                      >
+                        <Github className="w-3.5 h-3.5" /> github ↗
+                      </a>
+                      {projects[currentProject].live && (
+                        <a
+                          href={projects[currentProject].live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1.5 py-0.5"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" /> live ↗
+                        </a>
+                      )}
+                      {projects[currentProject].youtube && (
+                        <a
+                          href={projects[currentProject].youtube}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1.5 py-0.5"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" /> demo ↗
+                        </a>
+                      )}
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Bottom Pagination Dots and Navigation */}
+              <div className="flex flex-col items-center gap-3 mt-6">
+                <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                  {projects.map((proj, idx) => (
+                    <button
+                      key={proj.index}
+                      onClick={() => goToProject(idx)}
+                      aria-label={`Go to project ${idx + 1}: ${proj.title}`}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        idx === currentProject
+                          ? 'w-6 bg-accent'
+                          : 'w-2 bg-border-inner hover:bg-text-light'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <div className="flex items-center justify-between w-full pt-1">
+                  <button
+                    onClick={prevProject}
+                    className="mono text-xs text-text-faint hover:text-accent flex items-center gap-1 transition-colors"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" /> prev
+                  </button>
+                  <span className="mono text-[11px] text-text-light">
+                    {currentProject + 1} / {projects.length}
+                  </span>
+                  <button
+                    onClick={nextProject}
+                    className="mono text-xs text-text-faint hover:text-accent flex items-center gap-1 transition-colors"
+                  >
+                    next <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </FadeUp>
           </div>
         </div>
       </section>
