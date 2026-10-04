@@ -5,8 +5,6 @@ import { useScramble } from '../hooks/useScramble';
 import StatsDashboard from '../components/ContributionHeatmap';
 import ConwayBatmanBackground from '../components/ConwayBatmanBackground';
 import MathBackground from '../components/MathBackground';
-import PuppetMascot from '../components/PuppetMascot';
-import AiResumeModal from '../components/AiResumeModal';
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -239,7 +237,6 @@ export default function SinglePage() {
 
   const [currentProject, setCurrentProject] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 
   const nextProject = () => {
     setDirection(1);
@@ -824,16 +821,6 @@ export default function SinglePage() {
           </FadeUp>
         </div>
       </section>
-
-      {/* ─── AI RESUME AGENT (PUPPET) ────────────────────── */}
-      <PuppetMascot
-        isOpen={isAiModalOpen}
-        onClick={() => setIsAiModalOpen((prev) => !prev)}
-      />
-      <AiResumeModal
-        isOpen={isAiModalOpen}
-        onClose={() => setIsAiModalOpen(false)}
-      />
     </div>
   );
 }
