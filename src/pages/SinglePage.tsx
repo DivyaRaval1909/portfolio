@@ -1,6 +1,10 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { Mail, Linkedin, Github, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Mail, Linkedin, Github, ExternalLink, ChevronLeft, ChevronRight, Braces, Cloud,
+  CreditCard, Database, Network, Sparkles, Workflow,
+  type LucideIcon,
+} from 'lucide-react';
 import { useScramble } from '../hooks/useScramble';
 import StatsDashboard from '../components/ContributionHeatmap';
 import ConwayBatmanBackground from '../components/ConwayBatmanBackground';
@@ -40,6 +44,69 @@ function SectionHeader({ num, title }: { num: string; title: string }) {
     </FadeUp>
   );
 }
+
+type Skill = { name: string; logo?: string; Icon?: LucideIcon };
+
+const skillGroups: { title: string; skills: Skill[] }[] = [
+  {
+    title: 'Languages',
+    skills: [
+      { name: 'C++', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
+      { name: 'Java', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
+      { name: 'JavaScript', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+      { name: 'TypeScript', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
+      { name: 'Python', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
+      { name: 'SQL', Icon: Database },
+    ],
+  },
+  {
+    title: 'Backend',
+    skills: [
+      { name: 'Node.js', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+      { name: 'Express.js', logo: 'https://cdn.simpleicons.org/express/EAEAEA' },
+      { name: 'RESTful APIs', Icon: Braces },
+      { name: 'JWT Authentication', logo: 'https://cdn.simpleicons.org/jsonwebtokens/F0B90B' },
+      { name: 'Socket.IO', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/socketio/socketio-original.svg' },
+    ],
+  },
+  {
+    title: 'Frontend',
+    skills: [
+      { name: 'React.js', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+      { name: 'HTML', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
+      { name: 'CSS', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
+    ],
+  },
+  {
+    title: 'Databases',
+    skills: [
+      { name: 'MongoDB', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
+      { name: 'MySQL', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
+      { name: 'Redis', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg' },
+      { name: 'Vector DB', Icon: Network },
+    ],
+  },
+  {
+    title: 'Tools & Cloud',
+    skills: [
+      { name: 'Git', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
+      { name: 'GitHub', Icon: Github },
+      { name: 'Docker', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
+      { name: 'Postman', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg' },
+      { name: 'Razorpay API', Icon: CreditCard },
+      { name: 'AWS (Cloud Foundations)', Icon: Cloud },
+    ],
+  },
+  {
+    title: 'AI',
+    skills: [
+      { name: 'Retrieval-Augmented Generation (RAG)', Icon: Workflow },
+      { name: 'Generative AI', Icon: Sparkles },
+      { name: 'Ollama', logo: 'https://cdn.simpleicons.org/ollama/FFFFFF' },
+    ],
+  },
+  { title: 'CS Fundamentals', skills: [{ name: 'Data Structures' }, { name: 'Algorithms' }, { name: 'OOP' }, { name: 'DBMS' }, { name: 'Operating Systems' }, { name: 'Computer Networks' }] },
+];
 
 export default function SinglePage() {
   const { display: heroName } = useScramble('/divyaraval', 600);
@@ -165,16 +232,6 @@ export default function SinglePage() {
     },
     {
       index: '03',
-      title: 'LabelX',
-      description:
-        'Decentralized data labeling platform integrating Solana wallets, AWS S3, JWT authentication, and role-based access control to securely manage annotation workflows and blockchain-based reward distribution.',
-      stack: ['React.js', 'Node.js', 'Solana', 'AWS S3', 'JWT', 'Solidity'],
-      github: 'https://github.com/DivyaRaval1909/LabelX',
-      live: '',
-      youtube: '',
-    },
-    {
-      index: '04',
       title: 'DivDocs',
       description:
         'Built a Google Docs-style collaborative editor with real-time multi-user editing using Socket.IO. Implemented document search, inline renaming, sharing, auto-save, and live presence indicators. Developed scalable REST APIs and MongoDB-backed storage with export support for PDF, Markdown, HTML, and TXT.',
@@ -184,7 +241,7 @@ export default function SinglePage() {
       youtube: '',
     },
     {
-      index: '05',
+      index: '04',
       title: 'CricBid',
       description:
         'Production-grade decentralized IPL-style player auction platform built on Ethereum, enabling secure smart contract–based player bidding, team management, wallet integration, and transparent auction execution.',
@@ -194,7 +251,7 @@ export default function SinglePage() {
       youtube: '',
     },
     {
-      index: '06',
+      index: '05',
       title: 'BlockVote',
       description:
         'Secure decentralized voting platform built on Ethereum allowing election creation, voter registration, tamper-proof vote recording, and transparent real-time result tracking through a responsive Web3 interface.',
@@ -204,7 +261,7 @@ export default function SinglePage() {
       youtube: '',
     },
     {
-      index: '07',
+      index: '06',
       title: 'DocMind',
       description:
         'AI-powered document intelligence platform enabling semantic search, contextual question answering, and knowledge retrieval over uploaded documents using embeddings, vector search, and large language models.',
@@ -214,7 +271,7 @@ export default function SinglePage() {
       youtube: '',
     },
     {
-      index: '08',
+      index: '07',
       title: 'Episodic_Intelligence_Engine',
       description:
         'AI storytelling engine implementing a multi-stage episodic memory pipeline that combines LLMs, semantic retrieval, sentiment analysis, and contextual reasoning to generate coherent long-form narratives.',
@@ -224,13 +281,33 @@ export default function SinglePage() {
       youtube: '',
     },
     {
-      index: '09',
+      index: '08',
       title: 'Chatify',
       description:
         'Full-stack real-time chat application built with React, Express, and MongoDB featuring secure authentication, instant messaging, modern responsive UI, and persistent conversation history.',
       stack: ['React', 'Express', 'MongoDB', 'Node.js', 'Socket.io', 'Tailwind'],
       github: 'https://github.com/DivyaRaval1909/chatify',
       live: '',
+      youtube: '',
+    },
+    {
+      index: '09',
+      title: 'LabelX',
+      description:
+        'Decentralized data labeling platform integrating Solana wallets, AWS S3, JWT authentication, and role-based access control to securely manage annotation workflows and blockchain-based reward distribution.',
+      stack: ['React.js', 'Node.js', 'Solana', 'AWS S3', 'JWT', 'Solidity'],
+      github: 'https://github.com/DivyaRaval1909/LabelX',
+      live: '',
+      youtube: '',
+    },
+    {
+      index: '10',
+      title: 'ProfileIndex',
+      description:
+        'Built a GitHub profile explorer that turns public activity into a clear, interactive overview. It brings profile details, organizations, repositories, pull requests, issues, and recent activity into one place, with contribution summaries grouped by repository. Added separate views for open, merged, and closed work, live data from the GitHub API, responsive layouts, and a day/night theme. Searches run without sign-in, and profiles are not stored.',
+      stack: ['React', 'Express.js', 'JavaScript', 'CSS', 'GitHub REST API', 'Vercel'],
+      github: 'https://github.com/DivyaRaval1909/profileindex',
+      live: 'https://profileindex.divyaraval.dev/',
       youtube: '',
     },
   ];
@@ -347,21 +424,38 @@ export default function SinglePage() {
             </FadeUp>
           </div>
 
-          <FadeUp delay={0.2} className="flex flex-wrap gap-2 mt-8">
-            {[
-              'C++', 'JavaScript', 'HTML5', 'CSS3', 'React.js', 'Node.js',
-              'Express.js', 'MySQL (SQL)', 'MongoDB (NoSQL)', 'AWS S3',
-              'Git', 'GitHub', 'Postman', 'DSA', 'OOP', 'DBMS', 'Operating Systems',
-              'Cryptography', 'Blockchain'
-            ].map((s) => (
-              <span
-                key={s}
-                className="mono text-sm text-text-faint border border-border-inner px-[10px] py-[5px] hover:text-text-base hover:border-border-badge transition-all duration-200"
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {skillGroups.map((group, index) => (
+              <FadeUp
+                key={group.title}
+                delay={0.08 + index * 0.04}
+                className={`rounded-2xl border border-border-main bg-bg-card p-5 transition-colors hover:border-accent active:border-accent ${group.title === 'CS Fundamentals' ? 'sm:col-span-2' : ''}`}
               >
-                {s}
-              </span>
+                <h3 className="mono mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-accent">
+                  {group.title}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {group.skills.map((skill) => (
+                    <span
+                      key={skill.name}
+                      className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-border-inner px-2.5 py-1.5 mono text-xs text-text-muted transition-colors hover:border-accent active:border-accent"
+                    >
+                      {skill.logo ? (
+                        <img
+                          src={skill.logo}
+                          alt=""
+                          aria-hidden="true"
+                          loading="lazy"
+                          className="h-4 w-4 object-contain"
+                        />
+                      ) : skill.Icon ? <skill.Icon aria-hidden="true" className="h-4 w-4 shrink-0 text-accent" /> : null}
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              </FadeUp>
             ))}
-          </FadeUp>
+          </div>
         </div>
       </section>
 
@@ -450,15 +544,16 @@ export default function SinglePage() {
           <div className="hidden md:grid md:grid-cols-5 gap-4">
             {projects.map((proj, i) => {
               // Bento span map: 5-col grid, wide=3cols(60%), narrow=2cols(40%), full=5cols
-              const spanMap = [3, 2, 2, 3, 3, 2, 2, 3, 5];
+              const spanMap = [2, 3, 2, 3, 3, 2, 2, 3, 2, 3];
               const span = spanMap[i] ?? 2;
               const colClass = span === 5 ? 'md:col-span-5' : span === 3 ? 'md:col-span-3' : 'md:col-span-2';
               return (
                 <FadeUp key={proj.index} delay={i * 0.06} className={colClass}>
                   <motion.div
                     whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.99 }}
                     transition={{ duration: 0.2 }}
-                    className="p-7 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 transition-all duration-300 h-full flex flex-col justify-between"
+                    className="p-7 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 active:bg-bg-card-hover active:border-accent active:ring-accent/20 transition-all duration-300 h-full flex flex-col justify-between"
                   >
                     <div>
                       <p className="mono text-xs text-text-light mb-3">{proj.index} ///</p>
@@ -520,7 +615,7 @@ export default function SinglePage() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <span className="mono text-xs text-accent font-semibold">
-                    {`[ ${projects[currentProject].index} / 0${projects.length} ]`}
+                    {`[ ${projects[currentProject].index} / ${String(projects.length).padStart(2, '0')} ]`}
                   </span>
                   <span className="mono text-[11px] text-text-faint">
                     ({currentProject + 1} of {projects.length})
@@ -768,8 +863,6 @@ export default function SinglePage() {
           <StatsDashboard />
         </div>
       </section>
-
-      <div className="border-t border-border-main max-w-[680px] mx-auto" />
 
       {/* ─── CONTACT ──────────────────────────────────────── */}
       <section id="contact" className="min-h-screen flex flex-col justify-center overflow-x-hidden py-24 px-6 text-center">

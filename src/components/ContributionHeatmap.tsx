@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Github, Code, Award } from 'lucide-react';
+import { Github, Search } from 'lucide-react';
 
 interface GithubStats {
     totalContributions: number;
@@ -114,18 +114,18 @@ export default function StatsDashboard() {
     }, []);
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mx-auto text-left">
+        <div className="grid grid-cols-1 gap-6 w-full max-w-6xl mx-auto text-left sm:grid-cols-2 xl:grid-cols-4">
             {/* GitHub Stats Box */}
             <a
                 href="https://github.com/DivyaRaval1909"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-6 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 transition-all duration-300 flex flex-col justify-between"
+                className="group p-6 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 active:bg-bg-card-hover active:border-accent active:ring-accent/20 transition-all duration-300 flex flex-col justify-between"
             >
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <span className="mono text-xs text-text-faint">/// GitHub</span>
-                        <Github className="w-5 h-5 text-text-faint group-hover:text-accent transition-colors" />
+                        <Github className="w-5 h-5 text-text-faint group-hover:text-accent group-active:text-accent transition-colors" />
                     </div>
                     <p className="text-3xl font-bold text-text-card-title mb-2">
                         {ghLoading ? (
@@ -149,12 +149,17 @@ export default function StatsDashboard() {
                 href="https://leetcode.com/DivyaRaval"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-6 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 transition-all duration-300 flex flex-col justify-between"
+                className="group p-6 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 active:bg-bg-card-hover active:border-accent active:ring-accent/20 transition-all duration-300 flex flex-col justify-between"
             >
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <span className="mono text-xs text-text-faint">/// LeetCode</span>
-                        <Code className="w-5 h-5 text-text-faint group-hover:text-accent transition-colors" />
+                        <img
+                            src="https://cdn.simpleicons.org/leetcode/F89F1C"
+                            alt=""
+                            aria-hidden="true"
+                            className="h-5 w-5 object-contain"
+                        />
                     </div>
                     <p className="text-3xl font-bold text-text-card-title mb-2">
                         {lcLoading ? (
@@ -201,12 +206,17 @@ export default function StatsDashboard() {
                 href="https://codeforces.com/profile/divyaraval"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-6 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 transition-all duration-300 flex flex-col justify-between"
+                className="group p-6 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 active:bg-bg-card-hover active:border-accent active:ring-accent/20 transition-all duration-300 flex flex-col justify-between"
             >
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <span className="mono text-xs text-text-faint">/// Codeforces</span>
-                        <Award className="w-5 h-5 text-text-faint group-hover:text-accent transition-colors" />
+                        <img
+                            src="https://cdn.simpleicons.org/codeforces/1F8ACB"
+                            alt=""
+                            aria-hidden="true"
+                            className="h-5 w-5 object-contain"
+                        />
                     </div>
                     <p className="text-3xl font-bold text-text-card-title mb-2">
                         {cfLoading ? (
@@ -254,6 +264,37 @@ export default function StatsDashboard() {
                     <div className="flex justify-between mono text-[10px] text-text-muted">
                         <span>Profile:</span>
                         <span className="text-accent">codeforces.com/profile/divyaraval ↗</span>
+                    </div>
+                </div>
+            </a>
+
+            {/* Open Source Profile Box */}
+            <a
+                href="https://profileindex.divyaraval.dev/?username=divyaraval1909"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open the ProfileIndex page for GitHub user divyaraval1909"
+                className="group p-6 border border-border-main rounded-3xl bg-bg-card ring-1 ring-accent/10 hover:bg-bg-card-hover hover:border-accent hover:ring-accent/20 active:bg-bg-card-hover active:border-accent active:ring-accent/20 transition-all duration-300 flex flex-col justify-between"
+            >
+                <div>
+                    <div className="flex items-center justify-between mb-4">
+                        <span className="mono text-xs text-text-faint">/// ProfileIndex</span>
+                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6">
+                            <text x="12" y="19" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="22" fontWeight="700" fill="var(--accent)">g</text>
+                        </svg>
+                    </div>
+                    <p className="text-xl font-bold text-text-card-title mb-2">ProfileIndex</p>
+                    <p className="mono text-xs text-text-muted mb-5">Explore my open-source contributions</p>
+
+                    <div className="flex items-center gap-2 rounded-xl border border-border-inner bg-bg-base px-3 py-3">
+                        <Search className="w-4 h-4 shrink-0 text-text-faint" />
+                        <span className="mono min-w-0 truncate text-xs text-text-base">divyaraval1909</span>
+                    </div>
+                </div>
+                <div className="mt-6 border-t border-border-inner pt-4">
+                    <div className="flex justify-between mono text-[10px] text-text-muted">
+                        <span>Explore profile:</span>
+                        <span className="text-accent">profileindex ↗</span>
                     </div>
                 </div>
             </a>

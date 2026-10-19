@@ -121,7 +121,7 @@ export default function Navigation() {
         <div className="hidden md:flex items-center gap-6">
           {NAV_SECTIONS.map((id) => (
             <button key={id} onClick={() => scrollTo(id)} className={linkClass(id)}>
-              {id}
+              {id.replace('-', ' ')}
             </button>
           ))}
           <div className="w-px h-3 bg-border-inner" />
@@ -171,7 +171,7 @@ export default function Navigation() {
                 className={`mono text-left text-xl tracking-[0.08em] transition-colors ${active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
                   }`}
               >
-                {id}
+                {id.replace('-', ' ')}
               </button>
             ))}
           </div>
